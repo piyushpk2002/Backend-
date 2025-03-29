@@ -1,5 +1,6 @@
 import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken'
+// import bcrypt from "bcryptjs";
 
 
 
@@ -27,7 +28,7 @@ const generateAccessTokensAndRefreshTokens = async (userId) => {
 }
 const signupUser = async (req, res) => {
     try {
-        const { name, username, email, password, mobile, location, company, userType } = req.body;
+        const { name,  email, password, mobile,  userType } = req.body;
         // Check if user already exists
         const userExists = await User.findOne({ email });
 
@@ -36,7 +37,7 @@ const signupUser = async (req, res) => {
         }
 
         const user = await User.create({
-            name, username, email, password, mobile, location, company, userType
+            name,  email, password, mobile,  userType
         });
         res.status(201).json({ user, message: "User created successfully" });
 
