@@ -14,7 +14,7 @@ connectDB();
 
 const app = express();
 
-// ✅ Enable CORS Middleware
+// Enable CORS Middleware
 app.use(cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],

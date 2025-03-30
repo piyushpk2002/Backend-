@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const companySchema = mongoose.Schema(
   {
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the User model
-      required: true,
-    },
+    // owner: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "User", // Reference to the User model
+    //   required: true,
+    // },
     primaryBusiness: { type: String, required: true },
     businessName: { type: String, required: true },
     address: { 
@@ -16,7 +16,7 @@ const companySchema = mongoose.Schema(
     },
     location: {
       country: { type: String, required: true },
-      city: { type: String, required: true },
+      city: { type: String },
     },
     website: { type: String, required: true },
     aboutCompany: { type: String },

@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/", protectRoute, adminRoute, getAllBusiness);
 router.post("/listbusiness", listBusiness);
-router.get("/category", getBusinessByCategory);
+router.get("/business/:primaryBusiness", getBusinessByCategory);
 
 export default router;
