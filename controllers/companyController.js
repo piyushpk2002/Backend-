@@ -119,3 +119,50 @@ export const getBusinessByCategory = async (req, res) => {
         res.status(500).json({ message: "Server Error", error: error.message });
     }
 };
+
+
+/**
+ * Search for products based on query parameters
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+
+const searchProducts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    
+    if (!query) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Search query is required' 
+      });
+    }
+
+    // Create a search pattern for MongoDB using regex
+    // This will match products where the name or description contains the query (case insensitive)
+    const searchPattern = new RegExp(query, 'i');
+    
+    const products = await Company.find({
+      $or: [
+        { name: searchPattern },
+        { description: searchPattern },
+        // Add more fields to search as needed
+      ]
+    }).limit(20); // Limiting results for performance
+    
+    return res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products
+    });
+  } catch (error) {
+    console.error('Search error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while performing search',
+      error: error.message
+    });
+  }
+};
+
+
