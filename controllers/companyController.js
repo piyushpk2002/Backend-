@@ -123,11 +123,10 @@ export const getBusinessByCategory = async (req, res) => {
 
 /**
  * Search for products based on query parameters
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * 
  */
 
-const searchProducts = async (req, res) => {
+export const searchProducts = async (req, res) => {
   try {
     const { query } = req.query;
     
