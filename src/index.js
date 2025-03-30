@@ -1,11 +1,11 @@
 import express, { urlencoded } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors'; 
-import connectDB from './src/db/connectDB.js';
+import connectDB from './db/connectDB.js';
 import cookieParser from 'cookie-parser';
 
-import userRoutes from './src/routes/userRoute.js';
-import companyRoute from './src/routes/companyRoute.js'
+import userRoutes from './routes/userRoute.js';
+import companyRoute from './routes/companyRoute.js'
 
 
 dotenv.config();
