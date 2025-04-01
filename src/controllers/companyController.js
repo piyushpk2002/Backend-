@@ -104,6 +104,8 @@ export const listBusiness = async (req, res) => {
 export const getBusinessByCategory = async (req, res) => {
     try {
         let { primaryBusiness } = req.params;
+        console.log(primaryBusiness);
+        
         primaryBusiness = decodeURIComponent(primaryBusiness); // Decode URL parameter
         console.log("Requested Category:", primaryBusiness);
 
@@ -128,27 +130,36 @@ export const getBusinessByCategory = async (req, res) => {
 
 export const searchProducts = async (req, res) => {
   try {
-    const { query } = req.query;
-    
-    if (!query) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Search query is required' 
+    // Get primaryBusiness query parameter
+    let { primaryBusiness } = req.query;
+    console.log("Primary Business:", primaryBusiness);
+
+    // If primaryBusiness is passed as an array (e.g. from URL), turn it into a string
+    if (Array.isArray(primaryBusiness)) {
+      primaryBusiness = primaryBusiness[0]; // Get the first element if it's an array
+    }
+
+    if (!primaryBusiness) {
+      return res.status(400).json({
+        success: false,
+        message: 'Primary business parameter is missing'
       });
     }
 
-    // Create a search pattern for MongoDB using regex
-    // This will match products where the name or description contains the query (case insensitive)
-    const searchPattern = new RegExp(query, 'i');
+    // Prepare the query with case-insensitive search
+    const searchCriteria = primaryBusiness ? primaryBusiness : '';
     
-    const products = await Company.find({
+    const query = {
       $or: [
-        { name: searchPattern },
-        { description: searchPattern },
-        // Add more fields to search as needed
+        { primaryBusiness: { $regex: searchCriteria, $options: 'i' } },
+        { businessName: { $regex: searchCriteria, $options: 'i' } }
       ]
-    }).limit(20); // Limiting results for performance
-    
+    };
+
+    // Execute the search
+    const products = await Company.find(query);
+    console.log("Products found:", products);
+
     return res.status(200).json({
       success: true,
       count: products.length,
@@ -161,7 +172,7 @@ export const searchProducts = async (req, res) => {
       message: 'Server error while performing search',
       error: error.message
     });
-  }
+  } 
 };
 
 
