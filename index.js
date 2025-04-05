@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRoutes); // Mounting the user routes
 app.use('/api/company', companyRoute);
-
+app.use()
 const PORT = process.env.PORT || 5000; 
 
 app.listen(PORT, () => {
