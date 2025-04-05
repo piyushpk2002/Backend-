@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 
 import userRoutes from './src/routes/userRoute.js';
 import companyRoute from './src/routes/companyRoute.js'
+import multer from 'multer';
+import { upload } from './src/middleware/multer.middleware.js';
 
 
 dotenv.config();
@@ -31,7 +33,13 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRoutes); // Mounting the user routes
 app.use('/api/company', companyRoute);
-app.use()
+
+app.post('/upload', upload.single('profileImage'), (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
+    res.json({ message: 'File uploaded successfully', file: req.file });
+    
+})
 const PORT = process.env.PORT || 5000; 
 
 app.listen(PORT, () => {
