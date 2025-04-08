@@ -14,7 +14,8 @@ const generateAccessTokensAndRefreshTokens = async (userId) => {
 
         const accessToken = await user.generateAccessTokens(userId);
         const refreshToken = await user.generateRefreshTokens(userId);
-
+        
+        
         user.refreshToken = refreshToken;
 
         await user.save({ validateBeforeSave: false });
@@ -70,9 +71,10 @@ const loginUser = async (req, res) => {
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
         const options = {
-            httpOnly: true,
-            secure: false, // ✅ Only secure in production
-            sameSite: "None" // ✅ Allow cross-site requests
+            path: "/",               // <== ensures it’s accessible everywhere
+            httpOnly: false,         // <== allows JS to access it via document.cookie
+            secure: false,           // <== true only on HTTPS
+            sameSite: "Lax",
         }
 
         return res.status(200)
@@ -118,7 +120,7 @@ const logoutUser = async (req, res) => {
 
         const options = {
             httpOnly: true,
-            secure: true
+            secure: false
         }
 
         return res.status(200)
@@ -135,59 +137,38 @@ const logoutUser = async (req, res) => {
 
 
 const refreshAccessToken = async (req, res) => {
-    try {
-        // Get the refresh token from cookies
-        const incomingRefreshToken = req.cookies.refreshToken;
-        
-        if (!incomingRefreshToken) {
-            console.log("No refresh token found");
-            return res.status(401).json({ message: "No refresh token provided" });
-        }
-        
-        console.log("Received Refresh Token:", incomingRefreshToken);
+   const incomingRefreshToken = req.cookies.refreshToken;
+   //console.log("Incoming refresh token:", incomingRefreshToken);
+   
 
-        // Verify the refresh token
-        let decodedToken;
-        try {
-            decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
-            console.log("Decoded Token:", decodedToken);
-        } catch (error) {
-            console.log("JWT Error:", error.message);
-            return res.status(403).json({ message: "Invalid or expired refresh token" });
-        }
+   const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+   if (!decoded) {
+       return res.status(401).json({ message: "Unauthorized request" });
+   }
 
-        // Find user based on decoded token ID
-        const user = await User.findById(decodedToken.id);
-        if (!user) {
-            console.log("User not found");
-            return res.status(401).json({ message: "Invalid Refresh Token" });
-        }
+   const user = await User.findById(decoded.id);
+   console.log(user);
+   
 
-        // Check if the refresh token matches the one in the database
-        if (incomingRefreshToken !== user.refreshToken) {
-            console.log("Stored refresh token does not match incoming token");
-            return res.status(401).json({ message: "Refresh Token expired or invalid" });
-        }
-
-        // Generate new access & refresh tokens
-        const { accessToken, newRefreshToken } = await generateAccessTokensAndRefreshTokens(user._id);
-
-        // Update the refresh token in the database
-        user.refreshToken = newRefreshToken;
-        await user.save({ validateBeforeSave: false });
-
-        // Set cookies for new tokens
-        const cookieOptions = { httpOnly: true, secure: true };
-        return res
-            .status(200)
-            .cookie("accessToken", accessToken, cookieOptions)
-            .cookie("refreshToken", newRefreshToken, cookieOptions)
-            .json({ message: "Access Token refreshed successfully" });
-
-    } catch (error) {
-        console.log("Error in refresh token:", error.message);
-        return res.status(500).json({ message: "Internal Server Error" });
+   if(!user){
+         return res.status(401).json({ message: "Unauthorized request" });
     }
+
+    const {accessToken, refreshToken} = await generateAccessTokensAndRefreshTokens(user._id);
+    
+    
+    //user.refreshToken = newRefreshToken;    
+   // await user.save({ validateBeforeSave: false });
+
+    const options = {
+        httpOnly: false,
+        secure: false
+    }
+    return res.status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json({ message: "New access token generated successfully" });
+
 };
 
 
