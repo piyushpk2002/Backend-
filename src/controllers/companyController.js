@@ -31,7 +31,10 @@ export const listBusiness = async (req, res) => {
             website: req.body.website,
             aboutCompany: req.body.aboutCompany,
             secondaryBusiness: req.body.secondaryBusiness,
-            serviceProducts: req.body.serviceProducts
+            serviceProducts: req.body.serviceProducts,
+            workingHour: req.body.workingHour,
+            email: req.body.email,
+            phone: req.body.phone,
         });
         await business.save({validateBeforeSave: false});
         res.status(201).json({ business, message: "Business listed successfully" });
@@ -116,5 +119,3 @@ export const searchProducts = async (req, res) => {
     });
   } 
 };
-
-

@@ -20,8 +20,12 @@ const companySchema = mongoose.Schema(
     },
     website: { type: String, required: true },
     aboutCompany: { type: String },
-    secondaryBusiness: { type: [String] },
-    serviceProducts: { type: [String] },
+    secondaryBusiness: { type: String },
+    serviceProducts: { type: String },
+    workingHour: {type: String},
+    email: {type: String},
+    phone: {type: String},
+
   },
   { timestamps: true }
 );
