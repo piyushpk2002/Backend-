@@ -18,7 +18,7 @@ const app = express();
 
 // Enable CORS Middleware
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173","https://t5bj8gmz-5173.inc1.devtunnels.ms"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow cookies if needed
 }));
