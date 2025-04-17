@@ -12,7 +12,7 @@ const companySchema = mongoose.Schema(
     address: { 
       street: { type: String },
       city: { type: String },
-      state: { type: String },
+      state: { type: String }
     },
     location: {
       country: { type: String},
