@@ -80,7 +80,7 @@ const loginUser = async (req, res) => {
         return res.status(200)
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
-            .json({ user: loggedInUser,token: accessToken, message: "User logged in Successfully" });
+            .json({ user: loggedInUser,token: accessToken,userType: user.userType, message: "User logged in Successfully" });
 
     } catch (error) {
         console.log("Error in login controller");
