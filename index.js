@@ -9,7 +9,9 @@ import companyRoute from "./src/routes/companyRoute.js";
 import multer from "multer";
 import { upload } from "./src/middleware/multer.middleware.js";
 
-dotenv.config();
+dotenv.config({
+  path: "./config/.env",
+});
 
 connectDB();
 
