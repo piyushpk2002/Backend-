@@ -2,6 +2,7 @@ import Company from '../models/BuisnessModel.js'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
 import { upload } from '../middleware/multer.middleware.js'
+import User from '../models/userModel.js'
 
 export const getAllBusiness = async (req, res) => {
     try {
@@ -13,14 +14,54 @@ export const getAllBusiness = async (req, res) => {
     }
 }
 
+// Count total companies
+export const getCompanyCount = async (req, res) => {
+  try {
+    const count = await Company.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error fetching company count:", error.message);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+
+// Count how many businesses are listed today
+export const getTodaysBusinessCount = async (req, res) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const count = await Company.countDocuments({
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+    });
+
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error getting today's business count:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+//get total user
+export const getTotalUsers = async (req, res) => {
+  try {
+    const count = await User.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error fetching total users:", error.message);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
 
 
 
 export const listBusiness = async (req, res) => {
     try {
-
-
-      
         // Create business with owner reference
         const business = await Company.create({
             //owner,

@@ -42,6 +42,8 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes); // Mounting the user routes
 app.use("/api/company", companyRoute);
 
+// app.use("api/company/count", companyRoute);
+
 app.post("/upload", upload.single("profileImage"), (req, res) => {
   console.log(req.body);
   console.log(req.file);
