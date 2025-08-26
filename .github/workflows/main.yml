@@ -1,3 +1,27 @@
+# name: Deploy on Commit
+
+# on: [push]
+
+# jobs:
+#   run-ssh-command:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Repo
+#         uses: actions/checkout@v3
+
+#       - name: Create SSH Key File
+#         run: |
+#           echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > /tmp/ec2-key.pem
+#           chmod 600 /tmp/ec2-key.pem
+
+#       - name: Run Series of Commands
+#         run: |
+#           ssh -o StrictHostKeyChecking=no -i /tmp/ec2-key.pem ubuntu@ec2-54-252-233-234.ap-southeast-2.compute.amazonaws.com << 'EOF'
+#             echo "Navigating to folder"
+#             cd server/
+#             ./deploy.sh
+#           EOF
+
 name: Deploy on Commit
 
 on: [push]
@@ -11,7 +35,7 @@ jobs:
 
       - name: Create SSH Key File
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > /tmp/ec2-key.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > /tmp/ec2-key.pem
           chmod 600 /tmp/ec2-key.pem
 
       - name: Run Series of Commands
