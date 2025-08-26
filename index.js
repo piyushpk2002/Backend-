@@ -8,6 +8,7 @@ import userRoutes from "./src/routes/userRoute.js";
 import companyRoute from "./src/routes/companyRoute.js";
 import multer from "multer";
 import { upload } from "./src/middleware/multer.middleware.js";
+import reviewRoutes from "./src/routes/reviewRoute.js";
 
 dotenv.config({
   path: "./config/.env",
@@ -41,8 +42,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes); // Mounting the user routes
 app.use("/api/company", companyRoute);
+app.use("/api/reviews", reviewRoutes);
 
-// app.use("api/company/count", companyRoute);
 
 app.post("/upload", upload.single("profileImage"), (req, res) => {
   console.log(req.body);

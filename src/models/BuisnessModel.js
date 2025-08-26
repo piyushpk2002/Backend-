@@ -30,5 +30,14 @@ const companySchema = mongoose.Schema(
   { timestamps: true }
 );
 
+// 📌 Add text index for smart search
+companySchema.index({
+  businessName: 'text',
+  primaryBusiness: 'text',
+  secondaryBusiness: 'text',
+  serviceProducts: 'text',
+  aboutCompany: 'text',
+});
+
 const Company = mongoose.model("Company", companySchema);
 export default Company;

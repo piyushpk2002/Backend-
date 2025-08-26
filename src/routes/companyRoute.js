@@ -7,6 +7,7 @@ import {
   getCompanyCount,
   getTodaysBusinessCount,
   getTotalUsers,
+  searchBusinesses,
 } from "../controllers/companyController.js";
 import { adminRoute, protectRoute } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
@@ -21,5 +22,6 @@ router.get("/searchResults", searchProducts);
 router.get("/count", getCompanyCount);
 router.get("/count/today", getTodaysBusinessCount);
 router.get("/count-user",getTotalUsers);
+router.get("/search", searchBusinesses);
 
 export default router;

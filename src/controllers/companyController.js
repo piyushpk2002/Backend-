@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 import axios from 'axios'
 import { upload } from '../middleware/multer.middleware.js'
 import User from '../models/userModel.js'
-
 export const getAllBusiness = async (req, res) => {
     try {
         //return all the Businesses
@@ -57,6 +56,26 @@ export const getTotalUsers = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+
+//search businesses and reviews in reviews page
+// Updated NLP-based search
+export const searchBusinesses = async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    const businesses = await Company.find(
+      { $text: { $search: query } },
+      { score: { $meta: "textScore" } }
+    ).sort({ score: { $meta: "textScore" } });
+
+    res.json({ businesses });
+  } catch (error) {
+    console.error('Error searching businesses:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 
 
 

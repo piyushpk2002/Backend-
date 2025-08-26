@@ -50,12 +50,10 @@ const signupUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "User not found" });
         }
-        // Check if password is correct
         const isPasswordCorrect = await user.comparePassword(password);
 
         if (!isPasswordCorrect) {
@@ -64,19 +62,17 @@ const loginUser = async (req, res) => {
 
         const { accessToken, refreshToken } = await generateAccessTokensAndRefreshTokens(user._id);
 
-        //store refreshTokens
         user.refreshToken = refreshToken;
         await user.save({ validateBeforeSave: false });
 
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
         const options = {
-            path: "/",               // <== ensures it’s accessible everywhere
-            httpOnly: false,         // <== allows JS to access it via document.cookie
-            secure: false,           // <== true only on HTTPS
+            path: "/",               
+            httpOnly: false,         
+            secure: false,           
             sameSite: "Lax",
         }
-
         return res.status(200)
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
@@ -156,10 +152,6 @@ const refreshAccessToken = async (req, res) => {
 
     const {accessToken, refreshToken} = await generateAccessTokensAndRefreshTokens(user._id);
     
-    
-    //user.refreshToken = newRefreshToken;    
-   // await user.save({ validateBeforeSave: false });
-
     const options = {
         httpOnly: false,
         secure: false
