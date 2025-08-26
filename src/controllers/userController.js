@@ -126,6 +126,8 @@ const logoutUser = async (req, res) => {
 
     } catch (error) {
         console.log("Error in logout");
+        console.log(error);
+        
 
         res.status(500).json({ message: error.message });
     }
